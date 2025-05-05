@@ -33,40 +33,63 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public String deleteCategory(Long categoryId) {
-        List<Category> categories = categoryRepository.findAll();
-        Category category = categories.stream()
-                .filter(c -> c.getId().equals(categoryId))
-                .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!"));
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+
+
+
+        categoryRepository.delete(category);
+
+        return "Category with ID " + categoryId + " deleted!!";
+//        List<Category> categories = categoryRepository.findAll();
+//        Category category = categories.stream()
+//                .filter(c -> c.getId().equals(categoryId))
+//                .findFirst()
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!"));
 
 
 //        categories.remove(category);
 
-        categoryRepository.delete(category);
 //        if(category == null)
 //            return "Category not found";
 
-        return "Category with ID " + categoryId + " deleted!!";
     }
 
     @Override
     public Category updateCategory(Category category, Long categoryId) {
-        List<Category> categories = categoryRepository.findAll();
 
-        Optional<Category> optionalCategory = categories.stream()
-                .filter(c -> c.getId().equals(categoryId))
-                .findFirst();
+        Category savedCategory = categoryRepository.findById(categoryId)
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
 
-        if (optionalCategory.isPresent()){
-            Category existingCategory = optionalCategory.get();
-            existingCategory.setCategoryName(category.getCategoryName());
+        category.setId(categoryId);
+        savedCategory = categoryRepository.save(category);
 
-            Category savedCategory = categoryRepository.save(existingCategory);
+        return savedCategory;
 
-            return savedCategory;
-        }else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!");
-        }
+
+
+//        Optional<Category> savedCategoryOtional = categoryRepository.findById(categoryId);
+//
+//        Category savedCategory = savedCategoryOtional
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+
+//        Earlier we were fetching all categories from DB and updating only one required category
+//                now we are fetching only one category from the DB that needs to be updated
+//        Optional<Category> optionalCategory = categories.stream()
+//                .filter(c -> c.getId().equals(categoryId))
+//                .findFirst();
+//
+//        if (optionalCategory.isPresent()){
+//            Category existingCategory = optionalCategory.get();
+//            existingCategory.setCategoryName(category.getCategoryName());
+//
+//            Category savedCategory = categoryRepository.save(existingCategory);
+//
+//            return savedCategory;
+//        }else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!");
+//        }
 
     }
 }
