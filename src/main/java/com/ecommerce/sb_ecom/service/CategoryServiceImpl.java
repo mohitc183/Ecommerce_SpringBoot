@@ -1,5 +1,6 @@
 package com.ecommerce.sb_ecom.service;
 
+import com.ecommerce.sb_ecom.exceptions.ResourceNotFoundException;
 import com.ecommerce.sb_ecom.model.Category;
 import com.ecommerce.sb_ecom.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class CategoryServiceImpl implements CategoryService{
     public String deleteCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+                .orElseThrow( () -> new ResourceNotFoundException("Category", "categoryId", String.valueOf(categoryId)) );
 
 
 
@@ -59,8 +61,14 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category updateCategory(Category category, Long categoryId) {
 
+//        Throwing custom exceptions and handling them using our custoom exception handler
         Category savedCategory = categoryRepository.findById(categoryId)
-                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+                .orElseThrow( () -> new ResourceNotFoundException("Category", "categoryId", String.valueOf(categoryId)) );
+
+
+//        Category savedCategory = categoryRepository.findById(categoryId)
+//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
+
 
         category.setId(categoryId);
         savedCategory = categoryRepository.save(category);
