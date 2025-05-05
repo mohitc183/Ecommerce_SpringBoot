@@ -1,5 +1,6 @@
 package com.ecommerce.sb_ecom.service;
 
+import com.ecommerce.sb_ecom.exceptions.APIException;
 import com.ecommerce.sb_ecom.exceptions.ResourceNotFoundException;
 import com.ecommerce.sb_ecom.model.Category;
 import com.ecommerce.sb_ecom.repository.CategoryRepository;
@@ -23,20 +24,31 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+
+        List<Category> categories = categoryRepository.findAll();
+        if(categories.isEmpty())
+            throw new APIException("There are currently no categories present in the Database!!");
+
+        return categories;
     }
+
+
 
     @Override
     public void createCategory(Category category) {
-//        category.setId(nextId++);
+        Category savedCategory = categoryRepository.findByCategoryName(category.getCategoryName());
+        if(savedCategory != null){
+            throw new APIException("Category with " + category.getCategoryName() + " already exists!!!");
+        }
         categoryRepository.save(category);
     }
+
+
 
     @Override
     public String deleteCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
-//                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Resource Not Found!") );
                 .orElseThrow( () -> new ResourceNotFoundException("Category", "categoryId", String.valueOf(categoryId)) );
 
 
@@ -44,6 +56,8 @@ public class CategoryServiceImpl implements CategoryService{
         categoryRepository.delete(category);
 
         return "Category with ID " + categoryId + " deleted!!";
+
+
 //        List<Category> categories = categoryRepository.findAll();
 //        Category category = categories.stream()
 //                .filter(c -> c.getId().equals(categoryId))
@@ -61,7 +75,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category updateCategory(Category category, Long categoryId) {
 
-//        Throwing custom exceptions and handling them using our custoom exception handler
+//        Throwing custom exceptions and handling them using our custom exception handler
         Category savedCategory = categoryRepository.findById(categoryId)
                 .orElseThrow( () -> new ResourceNotFoundException("Category", "categoryId", String.valueOf(categoryId)) );
 
