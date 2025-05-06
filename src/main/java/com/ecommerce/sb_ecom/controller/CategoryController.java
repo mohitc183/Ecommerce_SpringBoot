@@ -1,6 +1,7 @@
 package com.ecommerce.sb_ecom.controller;
 
 import com.ecommerce.sb_ecom.model.Category;
+import com.ecommerce.sb_ecom.payload.CategoryResponse;
 import com.ecommerce.sb_ecom.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+
     @GetMapping(path = "/public/categories")
-    public ResponseEntity<List<Category>> getAllCategories(){
-        List categgories = categoryService.getAllCategories();
-        return new ResponseEntity<>(categgories, HttpStatus.OK);
+    public ResponseEntity<CategoryResponse> getAllCategories(){
+        CategoryResponse categoryResponse = categoryService.getAllCategories();
+        return new ResponseEntity<>(categoryResponse, HttpStatus.OK);
     }
+
 
     @PostMapping(path = "/public/categories")
     //@Valid is used here to send a more user-friendly exceptions if blank category name is sent
@@ -37,12 +40,14 @@ public class CategoryController {
         return new ResponseEntity<>("Category added", HttpStatus.CREATED);
     }
 
+
     @DeleteMapping(path = "/admin/categories/{categoryId}")
     public ResponseEntity deleteCategory(@PathVariable Long categoryId){
 
         String status = categoryService.deleteCategory(categoryId);
         return new ResponseEntity(status, HttpStatus.OK);
     }
+
 
     @PutMapping(path = "/public/categories/{categoryId}")
     public ResponseEntity<String> updateCategory(@Valid @RequestBody Category category,
