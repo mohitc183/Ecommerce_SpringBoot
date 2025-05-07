@@ -1,6 +1,7 @@
 package com.ecommerce.sb_ecom.service;
 
 import com.ecommerce.sb_ecom.model.Category;
+import com.ecommerce.sb_ecom.payload.CategoryDTO;
 import com.ecommerce.sb_ecom.payload.CategoryResponse;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,11 @@ import java.util.List;
 
 public interface CategoryService {
 
-    CategoryResponse getAllCategories();
-    void createCategory(Category category);
+    CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize);
 
-    String deleteCategory(Long categoryId);
+    CategoryDTO createCategory(CategoryDTO categoryDTO);
 
-    Category updateCategory(Category category, Long categoryId);
+    CategoryDTO deleteCategory(Long categoryId);
+
+    CategoryDTO updateCategory(CategoryDTO CategoryDTO, Long categoryId);
 }
