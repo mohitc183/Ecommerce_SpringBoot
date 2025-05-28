@@ -1,6 +1,7 @@
 package com.ecommerce.sb_ecom.security;
 
-import com.ecommerce.sb_ecom.security.services.UserDetailsImpl;
+import com.ecommerce.sb_ecom.security.jwt.AuthEntryPointJwt;
+import com.ecommerce.sb_ecom.security.jwt.AuthTokenFilter;
 import com.ecommerce.sb_ecom.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -74,7 +75,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/admin/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                    `.anyRequest().authenticated());
+                    .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJWTTokenFilter(), UsernamePasswordAuthenticationFilter.class);
