@@ -31,6 +31,8 @@ public class JwtUtils {
     @Value("${spring.ecom.app.jwtCookieName}")
     private String jwtCookie;
 
+
+
 //    public String getJwtFromHeader(HttpServletRequest request) {
 //        String bearerToken = request.getHeader("Authorization");
 //        logger.debug("Authorization Header: {}", bearerToken);
@@ -40,29 +42,41 @@ public class JwtUtils {
 //        return null;
 //    }
 
-    public String getJwtFromCookies(HttpServletRequest request){
+//    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
+//
+//        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+//
+//        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
+//                .path("/api")
+//                .maxAge(24 * 60 * 60 )
+//                .httpOnly(false)
+//                .build();
+//
+//        return cookie;
+//
+//    }
 
-        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-        System.out.println("Cookie : " + cookie.getValue());
-        if(cookie != null){
-            return cookie.getValue();
-        }else{
-            return null;
-        }
-    }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal){
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
-                .path("/api")
-                .maxAge(24 * 60 * 60 )
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60)
                 .httpOnly(false)
                 .build();
 
         return cookie;
     }
 
+    public String getJwtFromCookies(HttpServletRequest request){
+
+        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+//        System.out.println("Cookie : " + cookie.getValue());
+        if(cookie != null){
+            return cookie.getValue();
+        }else{
+            return null;
+        }
+    }
 
     public String generateTokenFromUsername(String username) {
 //        String username = userDetails.getUsername();
