@@ -5,6 +5,7 @@ import com.ecommerce.sb_ecom.model.Address;
 import com.ecommerce.sb_ecom.model.User;
 import com.ecommerce.sb_ecom.payload.AddressDTO;
 import com.ecommerce.sb_ecom.repository.AddressRepository;
+import com.ecommerce.sb_ecom.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,9 @@ public class AddressServiceImpl implements AddressService{
 
     @Autowired
     AddressRepository addressRepository;
+
+    @Autowired
+    AuthUtil authUtil;
 
     @Override
     public AddressDTO createAddress(AddressDTO addressDTO, User user) {
@@ -55,5 +59,19 @@ public class AddressServiceImpl implements AddressService{
         AddressDTO addressDTO = modelMapper.map(address, AddressDTO.class);
 
         return addressDTO;
+    }
+
+    @Override
+    public List<AddressDTO> getUserAddresses( User user) {
+
+        user = authUtil.loggedInUser();
+
+        List<Address> addresses = user.getAddresses();
+
+        List<AddressDTO> addressDTOList = addresses.stream()
+                .map( address -> modelMapper.map(address, AddressDTO.class))
+                .collect(Collectors.toList());
+
+        return addressDTOList;
     }
 }

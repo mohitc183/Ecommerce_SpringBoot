@@ -2,7 +2,6 @@ package com.ecommerce.sb_ecom.service;
 
 import com.ecommerce.sb_ecom.model.User;
 import com.ecommerce.sb_ecom.payload.AddressDTO;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -13,4 +12,6 @@ public interface AddressService {
     List<AddressDTO> getAddresses();
 
     AddressDTO getAddressById(Long addressId);
+
+    List<AddressDTO> getUserAddresses(User user);
 }
